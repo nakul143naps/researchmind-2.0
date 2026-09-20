@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: researchmind-api
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: RESEARCHMIND_APP_URL
+        fromService:
+          type: web
+          name: researchmind-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: RESEARCHMIND_ALLOWED_ORIGINS
+        fromService:
+          type: web
+          name: researchmind-web
+          envVarKey: RENDER_EXTERNAL_URL
+
+  - type: web
+    name: researchmind-web
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: frontend/dist
+    plan: free
+    region: singapore
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: researchmind-api
+          envVarKey: RENDER_EXTERNAL_URL

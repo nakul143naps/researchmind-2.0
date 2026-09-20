@@ -76,7 +76,7 @@ Try the deployed app here:
 | `requirements.txt` | Python dependencies |
 | `.env.example` | Safe environment-variable template |
 
-## Run locally
+## Run locally (Streamlit)
 
 ### 1. Clone the repository
 
@@ -113,7 +113,7 @@ Copy `.env.example` to `.env` and add your credentials:
 
 ```env
 OPENROUTER_API_KEY=your_openrouter_api_key
-OPENROUTER_MODEL=meta-llama/llama-3.3-70b-instruct
+OPENROUTER_MODEL=qwen/qwen3.8-27b:free
 TAVILY_API_KEY=your_tavily_api_key
 ```
 
@@ -124,6 +124,53 @@ streamlit run app.py
 ```
 
 Open [http://localhost:8501](http://localhost:8501).
+
+## React + FastAPI development version
+
+The first standalone web client lives in `frontend/` and the request-scoped API in
+`backend/`. The original Streamlit app remains the default `app.py` entry point.
+Provider keys are entered in the browser and sent only with the active request;
+the FastAPI server does not write them to disk or environment variables.
+
+Start the API in PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+pip install -r backend/requirements.txt
+python -m uvicorn backend.main:app --reload --port 8000
+```
+
+In a second terminal, start the React client:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173). The client includes local
+browser history, an editable Markdown report, source cards, pipeline progress,
+copy/download actions, theme switching, and advanced model/depth controls.
+
+## Deploy ResearchMind 2.0 for free on Render
+
+The React + FastAPI version includes a `render.yaml` Blueprint that creates two
+free services: a static React frontend and a Python FastAPI backend. The
+original Streamlit production app is not replaced.
+
+1. Create a new public GitHub repository named `researchmind-2.0`.
+2. Push this project to that repository.
+3. In [Render](https://dashboard.render.com/), choose **New → Blueprint** and
+   connect the repository.
+4. Review the two services and deploy the Blueprint.
+5. Add `OPENROUTER_API_KEY` and `TAVILY_API_KEY` as environment variables on
+   the `researchmind-api` service. These are server-side fallback credentials;
+   the React app still supports request-scoped user keys.
+6. Open the generated `researchmind-web` URL.
+
+Render automatically wires the frontend API URL and backend CORS origin using
+the services' public URLs. Free services may sleep when idle, so the first
+request after inactivity can take longer.
 
 ## Deploy on Streamlit Community Cloud
 
