@@ -128,7 +128,13 @@
 [data-theme=dark] .sources-column .source-card h4{color:#f1efe9}
 [data-theme=dark] .sources-column .source-card small{color:#8bd0ad}
 [data-theme=dark] .sources-column .source-number{color:#f1845b}
-[data-theme=dark] .sources-column .critique-card{color:#e7e5dd}
+[data-theme=dark] .sources-column .critique-card,
+[data-theme=dark] .sources-column .critique-card *{color:#f1efe9}
+[data-theme=dark] .research-card textarea{color:#f1efe9}
+[data-theme=dark] .research-card textarea::placeholder{color:#b9bbb2}
+[data-theme=dark] .settings-panel input,
+[data-theme=dark] .settings-panel select{color:#f1efe9;background:#191a19}
+[data-theme=dark] .settings-panel input::placeholder{color:#aeb0a7}
 @media(max-width:760px){
   .markdown-preview{max-width:none;overflow-wrap:anywhere}
   .markdown-preview table{display:block;overflow-x:auto;white-space:nowrap}
