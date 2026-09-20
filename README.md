@@ -6,6 +6,8 @@
 </p>
 
 <p align="center">
+  <a href="https://researchmind-web.onrender.com/">Live Demo</a>
+  ·
   <a href="https://github.com/nakul143naps/researchmind-2.0">Repository</a>
   ·
   <a href="https://dashboard.render.com/">Deploy on Render</a>
@@ -14,6 +16,11 @@
   ·
   <a href="https://app.tavily.com/">Get a Tavily key</a>
 </p>
+
+> **Live demo:** [researchmind-web.onrender.com](https://researchmind-web.onrender.com/)
+>
+> The demo requires visitors to provide their own OpenRouter and Tavily keys.
+> Keys are entered for the active request and are not stored in browser history.
 
 ## Overview
 
