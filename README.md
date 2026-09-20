@@ -194,12 +194,14 @@ Deployment steps:
 5. Confirm the two services and click **Apply**.
 6. Wait for both services to become **Live**.
 7. Open the `researchmind-web` URL.
-8. If you want server-side fallback credentials, add
-   `OPENROUTER_API_KEY` and `TAVILY_API_KEY` to the API service environment.
 
 The frontend is configured through the Render service reference
 `VITE_API_URL`. Free Render services may sleep while idle, so the first
 request after inactivity can take longer.
+
+ResearchMind asks the user for an OpenRouter key and a Tavily key in the
+browser for each research request. The current backend does not use provider
+keys configured as permanent Render environment variables.
 
 ## Troubleshooting
 
