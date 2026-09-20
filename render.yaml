@@ -25,7 +25,6 @@ services:
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     plan: free
-    region: singapore
     envVars:
       - key: VITE_API_URL
         fromService:
