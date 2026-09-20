@@ -34,15 +34,26 @@ function App() {
   async function runResearch() {
     if (!topic.trim() || !openrouterKey.trim() || !tavilyKey.trim()) { setError("Add a research question and both provider keys to begin."); return; }
     setError(""); setResult(null); setReport(""); setActiveStep(0);
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 150000);
     try {
-      const timer = window.setInterval(() => setActiveStep((step) => step < 3 ? step + 1 : step), 1800);
-      const response = await fetch(`${API}/api/research`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topic, openrouter_api_key: openrouterKey, tavily_api_key: tavilyKey, model, temperature, max_sources: maxSources, depth }) });
-      window.clearInterval(timer);
+      const response = await fetch(`${API}/api/research`, { method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal, body: JSON.stringify({ topic, openrouter_api_key: openrouterKey, tavily_api_key: tavilyKey, model, temperature, max_sources: maxSources, depth }) });
+      window.clearTimeout(timeout);
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.detail ?? "The research pipeline could not complete.");
       setActiveStep(4); setResult(payload); setReport(payload.report);
       setHistory((items) => [{ ...payload, id: crypto.randomUUID(), createdAt: new Date().toISOString() }, ...items]);
-    } catch (caught) { setActiveStep(-1); setError(caught instanceof Error ? caught.message : "Something went wrong. Please try again."); }
+    } catch (caught) {
+      window.clearTimeout(timeout);
+      setActiveStep(-1);
+      if (caught instanceof DOMException && caught.name === "AbortError") {
+        setError("The research request timed out after 150 seconds. The providers may be waking up or rate-limited; check the API logs before retrying.");
+      } else if (caught instanceof TypeError) {
+        setError(`Could not reach the ResearchMind API at ${API}. This is usually a deployment URL or CORS configuration issue.`);
+      } else {
+        setError(caught instanceof Error ? caught.message : "Something went wrong. Please try again.");
+      }
+    }
   }
   function load(item: HistoryItem) { setTopic(item.topic); setResult(item); setReport(item.report); setShowHistory(false); setActiveStep(4); }
   async function copyReport() { await navigator.clipboard.writeText(report); setCopied(true); window.setTimeout(() => setCopied(false), 1600); }

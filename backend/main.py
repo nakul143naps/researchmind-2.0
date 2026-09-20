@@ -20,8 +20,9 @@ allowed_origins = [
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=True,
+    allow_origins=allowed_origins if allowed_origins else ["*"],
+    allow_origin_regex=r"https://.*\.onrender\.com",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
