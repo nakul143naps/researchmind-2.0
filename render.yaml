@@ -10,17 +10,18 @@ services:
     envVars:
       - key: RESEARCHMIND_APP_URL
         fromService:
-          type: static
+          type: web
           name: researchmind-web
           envVarKey: RENDER_EXTERNAL_URL
       - key: RESEARCHMIND_ALLOWED_ORIGINS
         fromService:
-          type: static
+          type: web
           name: researchmind-web
           envVarKey: RENDER_EXTERNAL_URL
 
-  - type: static
+  - type: web
     name: researchmind-web
+    runtime: static
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     plan: free
